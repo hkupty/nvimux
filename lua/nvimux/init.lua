@@ -14,10 +14,14 @@ nvimux.term = {}
 nvimux.commands = setmetatable({},{
 
 __newindex = function(tbl, key, value)
-    vim.api.nvim_add_user_command("Nvimux"..fns.snake_to_pascal(key),
-      function(opts)
-        value(opts.args, opts)
-      end, {})
+    if vim.api.nvim_add_user_command then
+      vim.api.nvim_add_user_command("Nvimux"..fns.snake_to_pascal(key),
+        function(opts)
+          value(opts.args, opts)
+        end, {})
+    else
+      vim.api.nvim_command('command! Nvimux'..fns.snake_to_pascal(key).." lua require'nvimux'.commands."..key.."()")
+    end
     rawset(tbl, key, value)
   end
 })
@@ -33,17 +37,6 @@ local tab_cmd = function(create_window)
   vim.cmd(create_window)
   fns.fn_or_command(nvimux.context.new_tab)
 end
-
--- [[ Commands
--- Commands defined in `nvimux.commands` will be automatically converted to nvim's command
-nvimux.commands.horizontal_split = function() return win_cmd[[spl|wincmd j]] end
-nvimux.commands.vertical_split = function() return win_cmd[[vspl|wincmd l]] end
-nvimux.commands.new_tab = function() return tab_cmd[[tabe]] end
-nvimux.commands.previous_tab = nvimux.go_to_last_tab
-nvimux.commands.term_paste = function(reg) vim.paste(vim.fn.getreg(reg or '"', 1, true), -1) end
-nvimux.commands.toggle_term = nvimux.term.toggle
-nvimux.commands.term_rename = nvimux.term.rename
--- ]]
 
 -- [[ Top-level helper functions
 nvimux.set_last_tab = function(tabn)
@@ -132,6 +125,17 @@ nvimux.term_only = function(options)
   end
 end
 
+-- ]]
+
+-- [[ Commands
+-- Commands defined in `nvimux.commands` will be automatically converted to nvim's command
+nvimux.commands.horizontal_split = function() return win_cmd[[spl|wincmd j]] end
+nvimux.commands.vertical_split = function() return win_cmd[[vspl|wincmd l]] end
+nvimux.commands.new_tab = function() return tab_cmd[[tabe]] end
+nvimux.commands.previous_tab = nvimux.go_to_last_tab
+nvimux.commands.term_paste = function(reg) vim.paste(vim.fn.getreg(reg or '"', 1, true), -1) end
+nvimux.commands.toggle_term = nvimux.term.toggle
+nvimux.commands.term_rename = nvimux.term.rename
 -- ]]
 
 local autocmds = {
