@@ -58,6 +58,14 @@ nvimux.go_to_last_tab = function()
   vim.cmd((nvimux.context.state.last_tab or 1)  .. 'tabn')
 end
 
+nvimux.go_to_tab = function(number)
+  local current_tabs = vim.api.nvim_list_tabpages()
+
+  if vim.tbl_contains(current_tabs, number) then
+    vim.api.nvim_set_current_tabpage(number)
+  end
+end
+
 
 nvimux.do_autocmd = function(commands)
   local au = {"augroup nvimux"}
@@ -162,16 +170,16 @@ local mappings = {
 
   -- Tab management
   {{'n', 'v', 'i', 't'}, 'c',  nvimux.commands.new_tab},
-  {{'n', 'v', 'i', 't'}, '0',  '0gt'},
-  {{'n', 'v', 'i', 't'}, '1',  '1gt'},
-  {{'n', 'v', 'i', 't'}, '2',  '2gt'},
-  {{'n', 'v', 'i', 't'}, '3',  '3gt'},
-  {{'n', 'v', 'i', 't'}, '4',  '4gt'},
-  {{'n', 'v', 'i', 't'}, '5',  '5gt'},
-  {{'n', 'v', 'i', 't'}, '6',  '6gt'},
-  {{'n', 'v', 'i', 't'}, '7',  '7gt'},
-  {{'n', 'v', 'i', 't'}, '8',  '8gt'},
-  {{'n', 'v', 'i', 't'}, '9',  '9gt'},
+  {{'n', 'v', 'i', 't'}, '0',  function() nvimux.go_to_tab(10) end},
+  {{'n', 'v', 'i', 't'}, '1',  function() nvimux.go_to_tab(1) end},
+  {{'n', 'v', 'i', 't'}, '2',  function() nvimux.go_to_tab(2) end},
+  {{'n', 'v', 'i', 't'}, '3',  function() nvimux.go_to_tab(3) end},
+  {{'n', 'v', 'i', 't'}, '4',  function() nvimux.go_to_tab(4) end},
+  {{'n', 'v', 'i', 't'}, '5',  function() nvimux.go_to_tab(5) end},
+  {{'n', 'v', 'i', 't'}, '6',  function() nvimux.go_to_tab(6) end},
+  {{'n', 'v', 'i', 't'}, '7',  function() nvimux.go_to_tab(7) end},
+  {{'n', 'v', 'i', 't'}, '8',  function() nvimux.go_to_tab(8) end},
+  {{'n', 'v', 'i', 't'}, '9',  function() nvimux.go_to_tab(9) end},
 }
 
 -- ]]
