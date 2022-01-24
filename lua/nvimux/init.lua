@@ -54,9 +54,7 @@ end
 nvimux.go_to_tab = function(number)
   local current_tabs = vim.api.nvim_list_tabpages()
 
-  if vim.tbl_contains(current_tabs, number) then
-    vim.api.nvim_set_current_tabpage(number)
-  end
+  vim.api.nvim_set_current_tabpage(current_tabs[number])
 end
 
 
