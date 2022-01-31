@@ -145,18 +145,18 @@ local mappings = {
   {{'n', 'v', 'i'},      '<C-r>', '<Cmd>source $MYVIMRC'},
 
   -- Window management
-  {{'n', 'v', 'i', 't'}, '!',  '<Cmd>wincmd T'},
+  {{'n', 'v', 'i', 't'}, '!',  '<Cmd>wincmd T<CR>'},
   {{'n', 'v', 'i', 't'}, '%',  nvimux.commands.vertical_split},
   {{'n', 'v', 'i', 't'}, '\"', nvimux.commands.horizontal_split},
   {{'n', 'v', 'i', 't'}, '-',  nvimux.go_to_last_tab},
   {{'n', 'v', 'i', 't'}, 'q',  nvimux.term.toggle },
-  {{'n', 'v', 'i', 't'}, 'w',  '<Cmd>tabs'},
+  {{'n', 'v', 'i', 't'}, 'w',  '<Cmd>tabs<CR>'},
   {{'n', 'v', 'i', 't'}, 'o',  '<C-w>w'},
   {{'n', 'v', 'i', 't'}, 'n',  'gt'},
   {{'n', 'v', 'i', 't'}, 'p',  'gT'},
-  {{'n', 'v', 'i'},      'x',  '<Cmd>bdelete %'},
+  {{'n', 'v', 'i'},      'x',  '<Cmd>bdelete %<CR>'},
   {{'t'},                'x',  function() vim.api.nvim_buf_delete(0, {force = true}) end},
-  {{'n', 'v', 'i'},      'X',  '<Cmd>enew \\| bd #'},
+  {{'n', 'v', 'i'},      'X',  '<Cmd>enew \\| bd #<CR>'},
 
   -- Moving around
   {{'n', 'v', 'i', 't'}, 'h',  '<C-w><C-h>'},
