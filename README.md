@@ -1,5 +1,7 @@
 # NVIMUX
 
+[![Chat on Matrix](https://matrix.to/img/matrix-badge.svg)](https://matrix.to/#/#nvimux:matrix.org)
+
 Nvimux allows neovim to work as a tmux replacement.
 
 It does so by mapping tmuxs keybindings to neovim, using its windows, buffers and terminals.
