@@ -2,10 +2,6 @@ local bindings = {}
 local vars = require('nvimux.vars')
 local fns = {}
 
-local consts = {
-  terminal_quit = '<C-\\><C-n>',
-}
-
 if vim.keymap ~= nil then
   bindings.set_keymap = vim.keymap.set
 else
@@ -50,13 +46,13 @@ bindings.keymap = function(binding, context)
         binding[1] = vim.tbl_filter(function(mode) return mode ~= 't' end, binding[1])
         bindings.set_keymap('t',
           context.prefix .. binding[2],
-          consts.terminal_quit .. binding[3] .. suffix,
+          '<C-\\><C-n>' .. binding[3] .. suffix,
           options)
       elseif vim.tbl_contains(binding[1], 'i') then
         binding[1] = vim.tbl_filter(function(mode) return mode ~= 'i' end, binding[1])
         bindings.set_keymap('i',
           context.prefix .. binding[2],
-          consts.esc .. binding[3] .. suffix,
+          '<ESC>' .. binding[3] .. suffix,
           options)
       end
     end
