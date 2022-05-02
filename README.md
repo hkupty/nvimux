@@ -1,6 +1,7 @@
 # NVIMUX
 
 [![Chat on Matrix](https://matrix.to/img/matrix-badge.svg)](https://matrix.to/#/#nvimux:matrix.org)
+[![Sponsor me](https://img.shields.io/github/sponsors/hkupty?style=flat-square)](https://github.com/sponsors/hkupty)
 
 Nvimux allows neovim to work as a tmux replacement.
 
