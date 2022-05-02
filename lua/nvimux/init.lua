@@ -40,7 +40,7 @@ end
 
 -- [[ Top-level helper functions
 nvimux.set_last_tab = function(tabn)
-  if tabn == nil then
+  if tabn == nil or tabn == "aucmd" then
     tabn = vim.fn.tabpagenr()
   end
 
@@ -57,14 +57,30 @@ nvimux.go_to_tab = function(number)
   vim.api.nvim_set_current_tabpage(current_tabs[number])
 end
 
+if vim.api.nvim_create_autocmd ~= nil then
+  -- TODO move out of this if block
+  vim.api.nvim_create_augroup("nvimux", {})
 
-nvimux.do_autocmd = function(commands)
-  local au = {"augroup nvimux"}
-  for _, v in ipairs(commands) do
-    table.insert(au, "au! " .. v.event .. " " .. v.target .. " " .. v.cmd)
+  nvimux.do_autocmd = function(opts)
+    for _, aucmd in ipairs(opts) do
+      vim.api.nvim_create_autocmd(aucmd.event, {
+        group = "nvimux",
+        pattern = aucmd.target,
+        callback = aucmd.callback,
+        desc = aucmd.desc
+      })
+    end
   end
-  table.insert(au, "augroup END")
-  vim.fn.execute(au)
+
+else
+  nvimux.do_autocmd = function(commands)
+    local au = {"augroup nvimux"}
+    for _, v in ipairs(commands) do
+      table.insert(au, "au! " .. v.event .. " " .. v.target .. " " .. v.cmd)
+    end
+    table.insert(au, "augroup END")
+    vim.fn.execute(au)
+  end
 end
 -- ]]
 
@@ -137,7 +153,7 @@ nvimux.commands.term_rename = nvimux.term.rename
 -- ]]
 
 local autocmds = {
-  {event = "TabLeave", target="*", cmd = [[lua require('nvimux').set_last_tab()]]},
+  {event = "TabLeave", target="*", cmd = [[lua require('nvimux').set_last_tab()]], callback = nvimux.set_last_tab, desc = "Sets last visited tab for navigation keymaps to work correctly"},
 }
 
 local mappings = {
@@ -198,21 +214,24 @@ local mappings = {
 nvimux.setup = function(opts)
   local context = vim.tbl_deep_extend("force", require('nvimux.vars'), opts.config or {})
 
+  -- Prepare state
   context.bindings = mappings
+  context.autocmds = vim.tbl_deep_extend("force", autocmds, opts.autocmds or {})
+  context.state = {}
+
   for _, b in ipairs(opts.bindings) do
     table.insert(context.bindings, b)
   end
 
+  nvimux.context = context
+
+  -- Execute actions
   for _, binding in ipairs(context.bindings) do
     bindings.keymap(binding, context)
   end
 
-  context.autocmds = vim.tbl_deep_extend("force", autocmds, opts.autocmds or {})
   nvimux.do_autocmd(context.autocmds)
 
-  context.state = {}
-
-  nvimux.context = context
 end
 
 return nvimux
